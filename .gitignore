@@ -1,7 +1,7 @@
 #Own#
-HP
-Cisco
-Teams_Network.txt
+Configs/HP/**
+Configs/Cisco/**
+**/Teams_Network.txt
 # Compiled source #
 ###################
 *.com
