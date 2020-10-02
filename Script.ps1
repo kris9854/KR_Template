@@ -60,6 +60,7 @@ Import-Module "$ScriptPath\TemplateFunction.psm1" -Verbose
 #Region Call function
 $ErrorActionPreference = "SilentlyContinue"
 New-Directory -DirName 'Log'
+New-Directory -DirName 'Forms'
 #New-Directory -DirName 'Output'
 #New-Directory -DirName 'Files'
 $ErrorActionPreference = "Continue"
@@ -74,5 +75,9 @@ $ErrorActionPreference = "Continue"
 #Region Script ending
 Write-Log -Message "Elapsed Time: $(((Get-Date)-$startDTM).TotalSeconds) seconds" -Level 'INFO'
 #Endregion Script ending
-
 #Endregion Script Execution Start
+
+#Forms establishment
+#main (not yet created)
+#Form Find_static_ip
+. $Forms\Form_staticip.ps1

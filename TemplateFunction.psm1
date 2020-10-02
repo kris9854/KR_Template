@@ -446,14 +446,20 @@ function Get-StaticIp {
         # Needed IP's default is 1
         [Parameter(Mandatory = $false)]
         [int]
-        $NeededIPs = 1
+        $NeededIPs = 1,
+
+        # ListBoxName name of the listbox to where the ip's should be populated
+        [Parameter(Mandatory = $true)]
+        [system.Windows.Forms.ListBox]
+        $ListBoxName
     )
     
     begin {
         # $script:steps = ([System.Management.Automation.PsParser]::Tokenize((Get-Content "$PSScriptRoot\$($MyInvocation.MyCommand.Name)"), [ref]$null) | Where-Object { $_.Type -eq 'Command' -and $_.Content -eq 'Write-ProgressHelper' }).Count
-        $steps = 2 + $NeededIps
+        $steps = 3 + $NeededIps
+        Write-Host $steps
         $stepCounter = 0
-        Write-ProgressHelper -Activity "Running Get-StaticIp" -Message "Finding availible Ip's" -StepNumber ($stepCounter++)
+        Write-ProgressHelper -Activity "Running Get-StaticIp" -Message "Finding availible Ip's" -StepNumber ($stepCounter++) -Progressbar $Prgbar_Listavail
         $IpAvailArray = @()
         # Static range 10-50 
         $SubnetCalculated = $Subnet.GetAddressBytes()[0].tostring() + '.' + $Subnet.GetAddressBytes()[1].tostring() + '.' + $Subnet.GetAddressBytes()[2].tostring()
@@ -463,7 +469,7 @@ function Get-StaticIp {
     process {
         $ResultArray = Test-OnlineFast -ComputerName $StaticIpRange
         foreach ($Iphost in $ResultArray) {
-            Write-ProgressHelper -Activity "Running Get-StaticIp" -Message "Finding availible Ip's" -StepNumber ($stepCounter++)
+            Write-ProgressHelper -Activity "Running Get-StaticIp" -Message "Finding availible Ip's" -StepNumber ($stepCounter++) -Progressbar $Prgbar_Listavail
             $CurrentTestIp = $null
             Write-Host "$Iphost"
             if ($Iphost.Online -eq $False) {
@@ -481,23 +487,58 @@ function Get-StaticIp {
         }
     }    
     end {
-        Write-ProgressHelper -Activity "Running Get-StaticIp" -Message "Finding availible Ip's" -StepNumber ($stepCounter++)
-        # Populate to GUI   
+
+        Write-ProgressHelper -Activity "Running Get-StaticIp" -Message "Finding availible Ip's" -StepNumber 99 -Progressbar $Prgbar_Listavail 
+        # Populate to GUI  
+        Update-ListViewHelper -ListBoxName $ListBoxName -PopulatingArray $IpAvailArray
+        Write-ProgressHelper -Activity "Running Get-StaticIp" -Message "Finding availible Ip's" -StepNumber 100 -Progressbar $Prgbar_Listavail 
     }
 }
 ##################################
 ##################################
+#Region Helpers
+#Helper for forms::
+function Update-ListViewHelper {
+    param (
+        # The name of the listbox
+        [Parameter(Mandatory = $true)]
+        [system.Windows.Forms.ListBox]
+        $ListBoxName,
 
+        # The array holding the items you wan't to populate
+        [Parameter(Mandatory = $true)]
+        [array]
+        $PopulatingArray
+    )
+    Write-Debug -Message "$PopulatingArray"
+    $ListBoxName.BeginUpdate()
+    foreach ($obj in $PopulatingArray) {
+        $ListBoxName.Items.Add($obj)
+    }    
+    $ListBoxName.EndUpdate()
+    
+}
 #Region no self design
 function Write-ProgressHelper {
     param(
-        [string]$Activity,
-        [int]$StepNumber,
-        [string]$Message
+        [Parameter(Mandatory = $true)][string]$Activity,
+        [Parameter(Mandatory = $true)][int]$StepNumber,
+        [Parameter(Mandatory = $false)][string]$Message,
+        [Parameter(Mandatory = $false)][system.Windows.Forms.ProgressBar]$progressbar
     )
+    if ($progressbar -ne $null) {
+        $progressbar.maximum = 100
+        $progressbar.value = ($StepNumber * $steps) / 100
+        $progressbar.PerformStep()
+    }
+    else {
+        # Write-Progress -Activity "$Activity" -Status $Message -PercentComplete (($StepNumber / $steps) * 100)
+        Write-Progress -Activity "$Activity" -Status $Message -PercentComplete (($StepNumber * $steps) / 100)
+    }
     
-    Write-Progress -Activity "$Activity" -Status $Message -PercentComplete (($StepNumber / $steps) * 100)
+    
 }
+#Endregion Helpers
 Function Test-OnlineFast {
     #Function for fast ping - Created https://community.idera.com/database-tools/powershell/powertips/b/tips/posts/final-super-fast-ping-command
     param
