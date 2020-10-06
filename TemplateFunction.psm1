@@ -215,6 +215,32 @@ function Test-InTextIpv6Match {
     End { }
 }
 # Endregion Working With IP
+#Getting the Firewall Rules 
+
+function Get-FirewallLog {
+    param (
+        # Name Of the Hostname 
+        [Parameter(Mandatory = $true)]
+        [array]
+        $Hostname
+    )
+    #Init Variables
+    $date = Get-Date -Format 'dd-MM'
+    
+    foreach ($PC in $Hostname) {
+        if (Test-Connection -ComputerName "$PC" -Count 1 -Quiet) {
+            Write-Debug -Message "$PC is Online"
+            if (!(Get-Item -Path "c:\temp\FirewallLogLocation" -ErrorAction SilentlyContinue)) {
+                New-Item -ItemType Directory -Path "c:\temp\FirewallLogLocation"
+            }
+            Copy-Item -Path "\\$PC\c$\Windows\System32\LogFiles\Firewall\pfirewall.log" -Destination "c:\temp\FirewallLogLocation\$PC-Firewall-$date.log" 
+        }
+        else {
+            Write-Debug -Message "$PC is not Online"
+        }
+
+    }
+}#Endregion Get-FirewallLog
 function Get-Hypervstatus {
     <#
     .SYNOPSIS
@@ -262,7 +288,7 @@ function Get-Hypervstatus {
         $Session | Remove-PSSession
   
     }
-}
+}#Endregion Get-Hypervstatus
 function Start-TsharkAnalysis {
     <#
     .SYNOPSIS
