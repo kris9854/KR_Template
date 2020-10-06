@@ -222,7 +222,12 @@ function Get-FirewallLog {
         # Name Of the Hostname 
         [Parameter(Mandatory = $true)]
         [array]
-        $Hostname
+        $Hostname,
+        # Savelocation
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^.*(?<!\\)$')]
+        [string]
+        $Savelocation
     )
     #Init Variables
     $date = Get-Date -Format 'dd-MM'
@@ -233,7 +238,8 @@ function Get-FirewallLog {
             if (!(Get-Item -Path "c:\temp\FirewallLogLocation" -ErrorAction SilentlyContinue)) {
                 New-Item -ItemType Directory -Path "c:\temp\FirewallLogLocation"
             }
-            Copy-Item -Path "\\$PC\c$\Windows\System32\LogFiles\Firewall\pfirewall.log" -Destination "c:\temp\FirewallLogLocation\$PC-Firewall-$date.log" 
+            $SvLoc = "$Savelocation" + "\$PC-Firewall-$date.log"
+            Copy-Item -Path "\\$PC\c$\Windows\System32\LogFiles\Firewall\pfirewall.log" -Destination "$SvLoc" 
         }
         else {
             Write-Debug -Message "$PC is not Online"
@@ -879,5 +885,4 @@ Function Get-PendingReboot {
     End { }## End End
 
 }## End Function Get-PendingReboot
-
 #Endregion no self design
