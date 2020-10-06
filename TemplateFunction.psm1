@@ -213,7 +213,7 @@ function Test-InTextIpv6Match {
     }
  
     End { }
-}
+}#Endregion Test-InTextIpv6Match
 # Endregion Working With IP
 #Getting the Firewall Rules 
 
