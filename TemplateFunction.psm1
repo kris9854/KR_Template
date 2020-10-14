@@ -143,6 +143,32 @@ Function Show-Msgbox {
 }## End Function Show-Msgbox
 # Region Working With IP
 function Send-KeepAlive {
+    <#
+    .SYNOPSIS
+    Designed to keep a VPN connection up. For x hours
+    
+    .DESCRIPTION
+    If a VPN connection is setup to drop the connection after no data has been sent on the link for 1.1 + hours. It will drop the session. 
+    This script has the inteand to send a ping to the DNS server. Therefore keaping the connection alive. 
+    
+    .PARAMETER KeepAliveAddress
+    The Address used to the ping.
+    Default: is your DNS
+    
+    .PARAMETER OptionalLabelUpdate
+    If you have a winform where you want to add some information to a label.
+    Default: None
+    
+    .PARAMETER Hours
+    The Hours you want this script to run.
+    Default: 8 hours is the default value here 
+    
+    .EXAMPLE
+    Send-KeepAlive -Hours 3 
+    
+    .NOTES
+    KEEP THE VPN ALIVE
+    #>
     [CmdletBinding()]
     param (
         # Ip of the address to check up to
