@@ -142,6 +142,80 @@ Function Show-Msgbox {
     }
 }## End Function Show-Msgbox
 # Region Working With IP
+function Send-KeepAlive {
+    [CmdletBinding()]
+    param (
+        # Ip of the address to check up to
+        [Parameter(Mandatory = $false)]
+        [string]
+        $KeepAliveAddress,
+
+        # Label to update $x
+        [Parameter(Mandatory = $false)]
+        $OptionalLabelUpdate,
+
+        # How many hours you want this to run for 
+        [Parameter(Mandatory = $false)]
+        [int]
+        $Hours = 8
+    )
+    begin {
+        $x = 0
+        #Check if keepaliveaddress is set if not default would be this dns server
+        if (($KeepAliveAddress.Length -eq 0)) {
+            $KeepAliveAddress = (
+                Get-NetIPConfiguration |
+                Where-Object {
+                    $_.IPv4DefaultGateway -ne $null -and
+                    $_.NetAdapter.Status -ne "Disconnected"
+                }
+            ).DNSServer.ServerAddresses[0]
+
+        }
+    }
+    process {
+        Start-Job -Name "KeepAlive-Main" -ScriptBlock {
+            do {
+                Test-Connection -Quiet -Count 2 -ComputerName "$KeepAliveAddress"
+                $x++
+                Start-Sleep -Seconds 3600
+                if ($optionalLabelUpdate -eq $null -or $optionalLabelUpdate -eq '' -or $optionalLabelUpdate -eq ' ' -or $optionalLabelUpdate -ge 1 ) {
+                    $global:lbl_increase.Text = 'Kept Alive for ' + "$x" + ' hour'
+                }
+            } until ($x = $Hours)
+        } 
+
+        # Check for Job Done
+        do {
+            Start-Sleep -Seconds 2;
+        } While ((Get-Job -Name "KeepAlive-Main").state -ne 'Completed');
+    }
+    end {
+        Write-Verbose -Message "Ran the function"
+    }
+}
+function Get-Hostip {
+    #Return Ip of localhost
+    param (
+        # Returned Object Name
+        [Parameter(Mandatory = $true)]
+        [string]
+        $ReturnedObjectName
+    )
+	
+    # Getting the first hostip
+    $Getting_HostIP = (
+        Get-NetIPConfiguration |
+        Where-Object {
+            $_.IPv4DefaultGateway -ne $null -and
+            $_.NetAdapter.Status -ne "Disconnected"
+        }
+    ).IPv4Address.IPAddress[0]
+
+    # Create a variable and set it equal to the Hostip
+    New-Variable -Name $ReturnedObjectName -Value "$Getting_HostIP" -Scope 'global'
+    Write-Debug -Message "Created variable $globalparameter with value $Getting_HostIP"
+}
 function Test-Ipv4Match {
     param (
         # IP
