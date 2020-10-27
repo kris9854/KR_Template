@@ -440,7 +440,7 @@ function Start-TsharkAnalysis {
         # Filter
         [Parameter(Mandatory = $false)]
         [string]
-        $Filter = 'host 10.0.253.201',
+        $Filter = Read-Host,
 
         # Netadapter
         [Parameter(Mandatory = $false)]
@@ -507,7 +507,7 @@ function Start-TsharkAnalysis {
         }
     }
     
-    process {
+    Get-Process {
         # Creates a cim sesseion for the host
         $CimSes = New-CimSession -ComputerName "$HostName"
 
@@ -624,6 +624,41 @@ function Get-StaticIp {
         # Populate to GUI  
         Update-ListViewHelper -ListBoxName $ListBoxName -PopulatingArray $IpAvailArray
         Write-ProgressHelper -Activity "Running Get-StaticIp" -Message "Finding availible Ip's" -StepNumber 100 -Progressbar $Prgbar_Listavail 
+    }
+}
+#Active Directory
+
+#User Creation for "Svendeprøve"
+function New-SVDUser {
+    [CmdletBinding()]
+    param (
+        # Parameter help description
+        [Parameter(AttributeValues)]
+        [ParameterType]
+        $GivenName
+
+        # UserName 
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Username
+
+        <#
+Department
+#>
+         
+
+    )
+    
+    begin {
+        
+    }
+    
+    Get-Process {
+        
+    }
+    
+    end {
+        
     }
 }
 ##################################
