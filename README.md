@@ -1,6 +1,6 @@
 ﻿# KR_Template
 
-Used my myself as a base for furthe development.
+Used by my myself as a base for further development.
 
 ## Description
 
