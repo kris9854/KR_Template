@@ -68,7 +68,9 @@ New-Directory -DirName 'Output'
 $ErrorActionPreference = "Continue"
 #Endregion call function
 #Region call Modules in Modules path
-foreach ($Powershellcustommodule in (Get-ChildItem -Path $Modules -Filter '*.ps1' -Recurse).FullName) {
+#Get The Modules in modules location excluding the Dev folder
+$script:ModulesPathScriptList = (Get-ChildItem -Path "$Modules" -Filter '*.ps1' -Recurse).FullName | Where-Object { $_ -notlike "$modules\Dev\*" }
+foreach ($Powershellcustommodule in $script:ModulesPathScriptList) {
     try {
         $message = "Importing: " + (Split-Path $Powershellcustommodule -Leaf)
         Write-Host -Object "$message" -ForegroundColor "green"
