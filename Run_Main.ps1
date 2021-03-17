@@ -41,7 +41,7 @@ Clear-Host                          #Clears the powershell windows messages
 #Endregion DLL's and System Objects
 #Region Script Specific variables.
 [string]$ScriptName = 'ScriptTemplate'      #Name of your script
-$VersionTemplate = '3.0.0'          #Template Script Version
+$VersionTemplate = '3.0.1'          #Template Script Version
 $VersionScript = '1.0.0'            #Script Version
 [string]$ScriptAuthor = 'Kristian Ebdrup'   #Script Author
 #Endregion Script Specific variables.
@@ -52,32 +52,45 @@ $global:ScriptPath = Split-Path $script:MyInvocation.MyCommand.Path
 [datetime]$startDTM = (Get-Date) # Get Start Time
 #Endregion variables and Global Values
 
-#Region Import "TemplateFunction.psm1" and "TemplateClasses.ps1"
-Import-Module "$ScriptPath\TemplateFunction.psm1" -Verbose
-. .\TemplateClasses.ps1 #Imports the Classes specified in the file 
-#Endregion Import "TemplateFunction.psm1"
 
-#Region Call function
+#Region Import Modules
+Import-Module "$ScriptPath\Modules\Template\TemplateFunctions.psm1" -Verbose
+#Import-Module -Name 'Posh-SSH'
+#Import-Module -Name 'powershell-yaml'
+
+#Endregion Import Modules
+
+#Region Call functions from TemplateFunctions
 $ErrorActionPreference = "SilentlyContinue"
 New-Directory -DirName 'Log'
-New-Directory -DirName 'Forms'
-#New-Directory -DirName 'Output'
-#New-Directory -DirName 'Files'
+New-Directory -DirName 'Modules'
+New-Directory -DirName 'Output'
 $ErrorActionPreference = "Continue"
 #Endregion call function
+#Region call Modules in Modules path
+foreach ($Powershellcustommodule in (Get-ChildItem -Path $Modules -Filter '*.ps1' -Recurse).FullName) {
+    try {
+        $message = "Importing: " + (Split-Path $Powershellcustommodule -Leaf)
+        Write-Host -Object "$message" -ForegroundColor "green"
+        . $Powershellcustommodule 
+        $ImportWasSuccessfull = "Imported all modules successfully"
+    }
+    catch {
+        $ImportError = "Error on module import - $Powershellcustommodule"
+    }
+}
+
+if (-not $ImportError) {
+    Write-Host -Object "$ImportWasSuccessfull" -ForegroundColor $script:writehostsuccessfullcolour
+}
+else {
+    Write-Host -Object "$ImportError" -ForegroundColor 'Red'
+}
+#Endregion call Modules in Modules path
 #############################################################################################################################
 #Region Script Execution Start
-#Region Main
-#_#_#_#_#_#_#_#_#_#_#_#_#_#_#_#
+#Region Main 
+# Used to call functions from imported modules
+Get-ScriptBanner
 
 #Endregion Main
-
-#Region Script ending
-Write-Log -Message "Elapsed Time: $(((Get-Date)-$startDTM).TotalSeconds) seconds" -Level 'INFO'
-#Endregion Script ending
-#Endregion Script Execution Start
-
-#Forms establishment
-#main (not yet created)
-#Form Find_static_ip
-. $Forms\Form_staticip.ps1
