@@ -1,0 +1,15 @@
+<#
+Envvariables
+Here you can create global variable to be used by the Global
+
+Please remove the .example.txt from file name in order to activate the ENV file
+#>
+#####################
+#Colour
+$Global:writehostsuccessfullcolour = 'green'
+$Global:BannerColour = 'cyan'
+$Global:TextColour = 'cyan'
+# Images
+#####################
+#ENV FTP 
+#USER

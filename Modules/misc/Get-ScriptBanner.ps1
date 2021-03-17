@@ -4,7 +4,7 @@ function Get-ScriptBanner {
         # Colour of text
         [Parameter(Mandatory = $false)]
         [string]
-        $Colour = $script:BannerColour
+        $Colour = $Global:BannerColour
     )
     Write-Host -Object "
 __________                           _________.__           .__  .__     ___________                   .__          __          

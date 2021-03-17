@@ -81,7 +81,7 @@ foreach ($Powershellcustommodule in (Get-ChildItem -Path $Modules -Filter '*.ps1
 }
 
 if (-not $ImportError) {
-    Write-Host -Object "$ImportWasSuccessfull" -ForegroundColor $script:writehostsuccessfullcolour
+    Write-Host -Object "$ImportWasSuccessfull" -ForegroundColor $Global:writehostsuccessfullcolour
 }
 else {
     Write-Host -Object "$ImportError" -ForegroundColor 'Red'
