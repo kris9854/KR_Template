@@ -54,12 +54,9 @@ $global:ScriptPath = Split-Path $script:MyInvocation.MyCommand.Path
 
 
 #Region Import Modules
-Import-Module -Name 'Posh-SSH'
-Import-Module -Name 'powershell-yaml'
-Import-Module "$ScriptPath\Modules\Template\TemplateFunctions.psm1" -Verbose
 #Import-Module -Name 'Posh-SSH'
 #Import-Module -Name 'powershell-yaml'
-
+Import-Module "$ScriptPath\Modules\Template\TemplateFunctions.psm1" -Verbose
 #Endregion Import Modules
 
 #Region Call functions from TemplateFunctions
