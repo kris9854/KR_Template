@@ -9,7 +9,20 @@ Please remove the .example.txt from file name in order to activate the ENV file
 $Global:writehostsuccessfullcolour = 'green'
 $Global:BannerColour = 'cyan'
 $Global:TextColour = 'cyan'
+$Global:ErrorTextColour = 'red'
 # Images
 #####################
 #ENV FTP 
-#USER
+$FTPUser = ''
+$FTPUserPasswordTxtFile = ".txt"
+$FTPUserAESPasswordKey = ".key"
+$RetriveFTPPassword = Get-Content "$FTPUserPasswordTxtFile" | ConvertTo-SecureString -Key (Get-Content "$FTPUserAESPasswordKey") | ConvertFrom-SecureString -AsPlainText
+$Global:FTPUserPassword = "$RetriveFTPPassword"
+
+$Global:FTPSRVAddress = ''
+
+#ENV DNS
+
+#ENV DHCP
+
+#ENC Hyperv
