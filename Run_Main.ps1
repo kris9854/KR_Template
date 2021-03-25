@@ -43,7 +43,7 @@ Clear-Host                          #Clears the powershell windows messages
 [string]$ScriptName = 'ScriptTemplate'      #Name of your script
 $VersionTemplate = '3.0.1'          #Template Script Version
 $VersionScript = '1.0.0'            #Script Version
-[string]$ScriptAuthor = 'Kristian Ebdrup'   #Script Author
+[string]$ScriptAuthor = 'Kristian'   #Script Author
 #Endregion Script Specific variables.
 
 #Region variables and Global Values
