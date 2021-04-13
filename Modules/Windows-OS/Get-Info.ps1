@@ -28,28 +28,25 @@ function Get-Info {
     
     begin {
         $Online = Test-Connection -ComputerName N101692 -Count 1 -Quiet
-            
-    }
+        if ($Online) {   
+        }
 
-}
+    }
     
-process {
-    try {
-        if ($Online) {
-            $env:PROCESSOR_IDENTIFIER 
-
-
-        }   
-    }
-    catch {
+    process {
+        try {
+        
+        
+        }
+        catch {
             
-    }
+        }
        
-}
-    
-end {
-    finally {
-            
     }
-}
+    
+    end {
+        finally {
+            
+        }
+    }
 }
