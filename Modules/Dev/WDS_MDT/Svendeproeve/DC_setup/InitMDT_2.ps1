@@ -1,3 +1,4 @@
+# https://docs.microsoft.com/en-us/windows/deployment/deploy-windows-mdt/create-a-windows-10-reference-image
 #Init the MDT Server
 Write-Host "Have you installed Windows ADK? If Not exit this"
 Read-Host

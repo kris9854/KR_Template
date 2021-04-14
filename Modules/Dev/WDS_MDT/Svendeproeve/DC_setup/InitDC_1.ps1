@@ -1,3 +1,4 @@
+# https://docs.microsoft.com/en-us/windows/deployment/deploy-windows-mdt/create-a-windows-10-reference-image
 # For initializing the DC env
 $location = (Get-Location).Path
 $oulist = Import-Csv -Path "$location\oulist.txt"
