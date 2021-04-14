@@ -1,0 +1,11 @@
+OUName,OUPath
+Labbing,"DC=Lab,DC=local"
+Accounts,"DC=Lab,DC=local,DC=local"
+Computers,"DC=Lab,DC=local,DC=local"
+Groups,"DC=Lab,DC=local,DC=local"
+Admins,"OU=Accounts,DC=Lab,DC=local,DC=local"
+Service Accounts,"OU=Accounts,DC=Lab,DC=local,DC=local"
+Users,"OU=Accounts,DC=Lab,DC=local,DC=local"
+Servers,"OU=Computers,DC=Lab,DC=local,DC=local"
+Workstations,"OU=Computers,DC=Lab,DC=local,DC=local"
+Security Groups,"OU=Groups,DC=Lab,DC=local,DC=local"
