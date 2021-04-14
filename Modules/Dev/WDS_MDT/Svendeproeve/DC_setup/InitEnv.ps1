@@ -1,5 +1,6 @@
 # For initializing the DC env
-$oulist = Import-Csv -Path c:\oulist.txt
+$location = (Get-Location).Path
+$oulist = Import-Csv -Path "$location\oulist.txt"
 ForEach ($entry in $oulist) {
     $ouname = $entry.ouname
     $oupath = $entry.oupath
