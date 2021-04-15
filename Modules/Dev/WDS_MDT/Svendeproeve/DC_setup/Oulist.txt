@@ -1,0 +1,11 @@
+OUName,OUPath
+LKCorp,"DC=LAB,DC=local"
+Accounts,"OU=LKCorp,DC=LAB,DC=local"
+Computers,"OU=LKCorp,DC=LAB,DC=local"
+Groups,"OU=LKCorp,DC=LAB,DC=local"
+Admins,"OU=Accounts,OU=LKCorp,DC=LAB,DC=local"
+Service Accounts,"OU=Accounts,OU=LKCorp,DC=LAB,DC=local"
+Users,"OU=Accounts,OU=LKCorp,DC=LAB,DC=local"
+Servers,"OU=Computers,OU=LKCorp,DC=LAB,DC=local"
+Workstations,"OU=Computers,OU=LKCorp,DC=LAB,DC=local"
+Security Groups,"OU=Groups,OU=LKCorp,DC=LAB,DC=local"
