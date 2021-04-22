@@ -4,19 +4,34 @@ function Create-ServerEnv {
         # Path
         [Parameter(Mandatory = $false)]
         [string]
-        $Path = $env:HOMEDRIVE
+        $VMPath = $env:HOMEDRIVE
     )
     
     begin {
-        if (-not [bool](Get-Item -Path 'C:\Server' -ErrorAction SilentlyContinue)) {
-            $Path = New-Item -Path $Path -Name 'Server'
-            New-Item -Path $Path -Name 'Disk'
-            New-Item -Path $Path -Name 'VM'
+        # Variable Read
+        $VirtualHardDiskPath = (Get-VMHost).VirtualHardDiskPath
+        $VirtualMachinePath = (Get-VMHost).VirtualMachinePath
+
+        if ((-not [bool](Get-Item -Path 'C:\Server' -ErrorAction SilentlyContinue)) -or
+            (-not [bool](Get-Item -Path 'C:\Server\Disk' -ErrorAction SilentlyContinue)) -or
+            (-not [bool](Get-Item -Path 'C:\Server\VM' -ErrorAction SilentlyContinue))) {
+                
+            New-Item -Path $Path -Name 'Server'
+            $VMPath = $VMPath + '\server'
+            New-Item -Path $VMPath -Name 'Disk'
+            $VMDiskPath = $VMPath + '\Disk'
+            New-Item -Path $VMPath -Name 'VM'
+            $VMPath = $VMPath + '\VM'
         }  
     }
     
     process {
-        
+        # Set Default values for hyper-v 
+        if (($VirtualHardDiskPath -ne $VMDiskPath) -or 
+            ($VirtualMachinePath -ne $VMPath)) {
+
+            Set-VMHost -VirtualHardDiskPath "$VMDiskPath" -VirtualMachinePath "$VMPath"
+        }
     }
     
     end {
@@ -60,6 +75,7 @@ function Create-DefinedVM {
     )
     
     begin {
+        Create-ServerEnv
         # Variable location
         $CliCoulour = 'Yellow'
         # Variable Read count
@@ -76,6 +92,7 @@ function Create-DefinedVM {
         Write-Host -Object "##      Client Vlan: $ClientVlan        ##" -ForegroundColor $CliCoulour
         Write-Host -Object '##########################################' -ForegroundColor $CliCoulour
 
+        
         if (-not $VMName) {
             Write-Host -Object 'Please provice a name for the new machine, IF you want to create multiple press ANY button: "' -ForegroundColor "$Global:ForegroundColour" -NoNewline
             $VMName = Read-Host -ErrorAction SilentlyContinue
@@ -92,6 +109,7 @@ function Create-DefinedVM {
     process {
         # Device Creation process
         foreach ($VM in $CsvImport) {
+            
             
         }
     }
