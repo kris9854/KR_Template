@@ -4,13 +4,19 @@ function Create-ServerEnv {
         # Path
         [Parameter(Mandatory = $false)]
         [string]
-        $VMPath = $env:HOMEDRIVE
+        $VMPath = $env:HOMEDRIVE,
+
+        # Name Of the Switch needed for the VM (should be a trunked virtual interface)
+        [Parameter(Mandatory = $false)]
+        [string]
+        $SwitchName = 'VintTrunk01'
     )
     
     begin {
         # Variable Read
         $VirtualHardDiskPath = (Get-VMHost).VirtualHardDiskPath
         $VirtualMachinePath = (Get-VMHost).VirtualMachinePath
+        $VmNetworkAdapter = (Get-VMSwitch -Name "$SwitchName").Name
 
         if ((-not [bool](Get-Item -Path 'C:\Server' -ErrorAction SilentlyContinue)) -or
             (-not [bool](Get-Item -Path 'C:\Server\Disk' -ErrorAction SilentlyContinue)) -or
@@ -23,6 +29,11 @@ function Create-ServerEnv {
             New-Item -Path $VMPath -Name 'VM'
             $VMPath = $VMPath + '\VM'
         }  
+
+        if (-not $VmNetworkAdapter) {
+            New-VMSwitch -Name "$SwitchName"
+            Get-VMNetworkAdapter -SwitchName "$SwitchName" -ManagementOS $true | Set-VMNetworkAdapterVlan -Trunk -AllowedVlanIdList "$Global:StandarServerVlan, $Global:StandardClientVlan"
+        }
     }
     
     process {
@@ -81,15 +92,13 @@ function Create-CustomVM {
         $BaseMemory = '2048',
 
         # Name Of the Switch needed for the VM (should be a trunked virtual interface)
-        [Parameter(AttributeValues)]
+        [Parameter(Mandatory = $false)]
         [string]
         $SwitchName = 'VintTrunk01'
     )
     
     begin {
-        Create-ServerEnv
-        	
-        #Set-VMNetworkAdapterVlan -Trunk -AllowedVlanIdList "200,300" -VMName "VmName" -VMNetworkAdapterName "TrunkNic" -NativeVlanId 1 
+        # Set-VMNetworkAdapterVlan -Trunk -AllowedVlanIdList "200,300" -VMName "VmName" -VMNetworkAdapterName "TrunkNic" -NativeVlanId 1 
         # Variable location
         $CliCoulour = 'Yellow'
         # Variable Read count
@@ -114,7 +123,8 @@ function Create-CustomVM {
     process {
         # Device Creation process
         foreach ($VM in $CsvImport) {
-            #Variable
+
+            # Variable
             $VMDiskPath = (Split-Path "$VMParentDisk") + '\' + "$vm" + '.vhdx'
             # Output to PS CLI
             Write-Host -Object '##########################################' -ForegroundColor "$CliCoulour"
@@ -125,7 +135,7 @@ function Create-CustomVM {
             Write-Host -Object "##      Client Vlan: $ClientVlan        ##" -ForegroundColor "$CliCoulour"
             Write-Host -Object '##########################################' -ForegroundColor "$CliCoulour"
             
-            #Creating the Machine with Differencing Disk. 
+            # Creating the Machine with Differencing Disk. 
             New-VHD -ParentPath "$VMParentDisk" -Path "$VMDiskPath" -Differencing
             New-VM -Name "$VM" -Generation "$VMGen" -MemoryStartupBytes "$BaseMemory" -SwitchName "$SwitchName"
             Set-VM -Name "$VM" -AutomaticCheckpointsEnabled $false -DynamicMemory $false 
