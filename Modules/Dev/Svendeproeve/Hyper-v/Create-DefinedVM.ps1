@@ -38,7 +38,7 @@ function Create-ServerEnv {
         
     }
 }
-function Create-DefinedVM {
+function Create-CustomVM {
     <#
     .SYNOPSIS
     
@@ -64,18 +64,32 @@ function Create-DefinedVM {
         [Parameter(Mandatory = $false)]
         [string]
         $VMName,
+
         # EnvFileLocation
         [Parameter(Mandatory = $false)]
         [string]
         $EnvFileLocation = '.\HypervEnv.ps1',
+
         # Csvheader Containing the hostnames
         [Parameter(Mandatory = $false)]
         [string]
-        $CSVHeader = 'ServerName'
+        $CSVHeader = 'ServerName',
+
+        # Base memory for the VM
+        [Parameter(Mandatory = $false)]
+        [string]
+        $BaseMemory = '2048',
+
+        # Name Of the Switch needed for the VM (should be a trunked virtual interface)
+        [Parameter(AttributeValues)]
+        [string]
+        $SwitchName = 'VintTrunk01'
     )
     
     begin {
         Create-ServerEnv
+        	
+        #Set-VMNetworkAdapterVlan -Trunk -AllowedVlanIdList "200,300" -VMName "VmName" -VMNetworkAdapterName "TrunkNic" -NativeVlanId 1 
         # Variable location
         $CliCoulour = 'Yellow'
         # Variable Read count
@@ -84,15 +98,6 @@ function Create-DefinedVM {
         [int]$ServerVlan = [int]$Global:StandarServerVlan
         [int]$ClientVlan = [int]$Global:StandardClientVlan
 
-        # Output to PS CLI
-        Write-Host -Object '##########################################' -ForegroundColor $CliCoulour
-        Write-Host -Object "##      VM Parent Disk: $VMParentDisk   ##" -ForegroundColor $CliCoulour
-        Write-Host -Object "##      VM Generation: $VMGen           ##" -ForegroundColor $CliCoulour
-        Write-Host -Object "##      Server Vlan: $ServerVlan        ##" -ForegroundColor $CliCoulour
-        Write-Host -Object "##      Client Vlan: $ClientVlan        ##" -ForegroundColor $CliCoulour
-        Write-Host -Object '##########################################' -ForegroundColor $CliCoulour
-
-        
         if (-not $VMName) {
             Write-Host -Object 'Please provice a name for the new machine, IF you want to create multiple press ANY button: "' -ForegroundColor "$Global:ForegroundColour" -NoNewline
             $VMName = Read-Host -ErrorAction SilentlyContinue
@@ -102,15 +107,29 @@ function Create-DefinedVM {
         }
         else {
             # To reduce code later i will set the csvimport name equal to the VMNAME
-            $CsvImport = $VMName
+            $CsvImport = "$VMName"
         }
     }
     
     process {
         # Device Creation process
         foreach ($VM in $CsvImport) {
+            #Variable
+            $VMDiskPath = (Split-Path "$VMParentDisk") + '\' + "$vm" + '.vhdx'
+            # Output to PS CLI
+            Write-Host -Object '##########################################' -ForegroundColor "$CliCoulour"
+            Write-Host -Object "##      VM Name: $VM                    ##" -ForegroundColor "$CliCoulour"
+            Write-Host -Object "##      VM Parent Disk: $VMParentDisk   ##" -ForegroundColor "$CliCoulour"
+            Write-Host -Object "##      VM Generation: $VMGen           ##" -ForegroundColor "$CliCoulour"
+            Write-Host -Object "##      Server Vlan: $ServerVlan        ##" -ForegroundColor "$CliCoulour"
+            Write-Host -Object "##      Client Vlan: $ClientVlan        ##" -ForegroundColor "$CliCoulour"
+            Write-Host -Object '##########################################' -ForegroundColor "$CliCoulour"
             
-            
+            #Creating the Machine with Differencing Disk. 
+            New-VHD -ParentPath "$VMParentDisk" -Path "$VMDiskPath" -Differencing
+            New-VM -Name "$VM" -Generation "$VMGen" -MemoryStartupBytes "$BaseMemory" -SwitchName "$SwitchName"
+            Set-VM -Name "$VM" -AutomaticCheckpointsEnabled $false -DynamicMemory $false 
+            Set-VMNetworkAdapterVlan -VMName "$VM" -Access -VlanId $ServerVlan
         }
     }
     
