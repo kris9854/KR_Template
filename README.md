@@ -26,3 +26,8 @@ Inspiration, code snippets, etc.
 Other stuff:
 
 - [THM-Writeups](https://github.com/kris9854/Writeup-THM-Writeups)
+
+## Extra
+
+- [platyPS](https://github.com/PowerShell/platyPS)
+- [ultimate-powershell-prompt-and-git-setup](https://hodgkins.io/ultimate-powershell-prompt-and-git-setup)
