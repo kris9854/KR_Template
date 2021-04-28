@@ -73,7 +73,7 @@ function Create-DHCPByForm {
             Write-Host Type in y to continue or any key to cancel...
             Write-Host
         }
-        $input = [Microsoft.VisualBasic.Interaction]::InputBox("Type in y to continue `n or any key to cancel...", "Create Scope", "")
+        #$input = [Microsoft.VisualBasic.Interaction]::InputBox("Type in y to continue `n or any key to cancel...", "Create Scope", "")
     }
     
     process {
