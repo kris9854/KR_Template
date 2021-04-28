@@ -803,24 +803,25 @@ Function Get-PendingReboot {
 
 }## End Function Get-PendingReboot
 #####################
-<#
-.SYNOPSIS
-Function Get-MACVendor returns the vendor for a given MAC-Address.
-.DESCRIPTION
-This script uses the API of https://macvendors.co. With Invoke-WebRequest (hence Version 3.0 is needed) it generates an output as xml.
-.PARAMETER MAC
-This is the only but mandatory parameter. Please enter a valid MAC-Address.
-It works both with colons or hyphens - you decide.
-.EXAMPLE
-Execute Get-MACVendor.ps1 directly from shell with dot sourcing
-. .\Get-MACVendor.ps1
-Get-MACVendor -MAC Value
-.NOTES
-Author: Oliver Jäkel | oj@jaekel-edv.de | @JaekelEDV
-with special support of @St_Meissner - thanks!
-#>
-#requires -Version 3.0
+
 Function Get-MACVendor {
+    <#
+    .SYNOPSIS
+    Function Get-MACVendor returns the vendor for a given MAC-Address.
+    .DESCRIPTION
+    This script uses the API of https://macvendors.co. With Invoke-WebRequest (hence Version 3.0 is needed) it generates an output as xml.
+    .PARAMETER MAC
+    This is the only but mandatory parameter. Please enter a valid MAC-Address.
+    It works both with colons or hyphens - you decide.
+    .EXAMPLE
+    Execute Get-MACVendor.ps1 directly from shell with dot sourcing
+    . .\Get-MACVendor.ps1
+    Get-MACVendor -MAC Value
+    .NOTES
+    Author: Oliver Jäkel | oj@jaekel-edv.de | @JaekelEDV
+    with special support of @St_Meissner - thanks!
+    #>
+    #requires -Version 3.0
     [CmdletBinding(SupportsShouldProcess = $True)]
     param (
         [Parameter(Mandatory = $true, Helpmessage = 'Enter a valid MAC-Address')]
