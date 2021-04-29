@@ -1,4 +1,4 @@
-function Invoke-Troubleshooting {
+function Invoke-WinTroubleshooting {
     [CmdletBinding()]
     param (
         # Problem
