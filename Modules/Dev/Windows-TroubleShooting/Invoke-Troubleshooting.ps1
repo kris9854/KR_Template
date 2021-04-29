@@ -32,7 +32,9 @@ function Invoke-Troubleshooting {
                 Write-Host -Object 'Please Interact with the CLI if input is needed' -ForegroundColor 'green'
             }
         }
-        
+        $console = $host.ui.rawui
+        $StandardColour = $host.ui.rawui.ForegroundColor
+        $console.foregroundcolor = "yellow"
         Write-Host ''
         $ChoosenTSPackage = "$TSCatalogPath\$ReadInput"
         $Diag = Get-TroubleshootingPack $ChoosenTSPackage | Invoke-TroubleshootingPack
@@ -40,6 +42,7 @@ function Invoke-Troubleshooting {
     }
     
     end {
+        $console.foregroundcolor = "$StandardColour"
         Return($Diag)
     }
 
