@@ -17,22 +17,30 @@ function Invoke-Troubleshooting {
     process {
         Write-Host ***************************************** -ForegroundColor $GuiColour
         foreach ($TSPackage in $TSCatalog) {
-            Write-Host $Count -ForegroundColor $GuiColour
-            Write-Host -Object " : $TSPackage.split('\')[-1]"-NoNewline -ForegroundColor $GuiColour
+            Write-Host $Count -ForegroundColor $GuiColour -NoNewline
+            $Package = $TSPackage.split('\')[-1]
+            Write-Host -Object ": $Package" -ForegroundColor $GuiColour
             $Count++
         }
         Write-Host ***************************************** -ForegroundColor $GuiColour
         Write-Host '' -ForegroundColor $GuiColour
         Write-Host -Object 'Please Input the name of the diagnostic you want to run: ' -ForegroundColor 'green' -NoNewline
         $ReadInput = Read-Host
+        switch ($ReadInput) {
+            'Networking' { Write-Host -Object '! PRESS Enter when prompted for instance ID !' -ForegroundColor 'green' }
+            Default {
+                Write-Host -Object 'Please Interact with the CLI if input is needed' -ForegroundColor 'green'
+            }
+        }
+        
+        Write-Host ''
         $ChoosenTSPackage = "$TSCatalogPath\$ReadInput"
-        $Diag = Get-TroubleshootingPack $ChoosenTSPackage
+        $Diag = Get-TroubleshootingPack $ChoosenTSPackage | Invoke-TroubleshootingPack
         
     }
     
     end {
-        Write-Host $Diag.RootCause
-        Return($DIAG)
+        Return($Diag)
     }
 
 }
