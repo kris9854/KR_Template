@@ -31,3 +31,4 @@ Other stuff:
 
 - [platyPS](https://github.com/PowerShell/platyPS)
 - [ultimate-powershell-prompt-and-git-setup](https://hodgkins.io/ultimate-powershell-prompt-and-git-setup)
+- [winui-3](https://docs.microsoft.com/en-us/windows/apps/winui/winui3/#winui-3-controls-gallery)
