@@ -60,11 +60,9 @@ Import-Module "$ScriptPath\Modules\Template\TemplateFunctions.psm1" -Verbose
 #Endregion Import Modules
 
 #Region Call functions from TemplateFunctions
-$ErrorActionPreference = "SilentlyContinue"
-New-Directory -DirName 'Log'
-New-Directory -DirName 'Modules'
-New-Directory -DirName 'Output'
-$ErrorActionPreference = "Continue"
+New-Directory -DirName 'Log' -ErrorAction SilentlyContinue
+New-Directory -DirName 'Modules' -ErrorAction SilentlyContinue
+New-Directory -DirName 'Output' -ErrorAction SilentlyContinue
 #Endregion call function
 #Region call Modules in Modules path
 #Get The Modules in modules location excluding the Dev folder

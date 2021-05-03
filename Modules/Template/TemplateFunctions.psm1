@@ -238,6 +238,7 @@ function Send-KeepAlive {
         Write-Verbose -Message "Ran the function"
     }
 }
+<#Section Set up in new folder structure 
 function Get-Hostip {
     #Return Ip of localhost
     param (
@@ -333,6 +334,7 @@ function Test-InTextIpv6Match {
     End { }
 }#Endregion Test-InTextIpv6Match
 # Endregion Working With IP
+#>
 #Getting the Firewall Rules 
 
 function Get-FirewallLog {

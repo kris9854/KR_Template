@@ -2,7 +2,6 @@
 Modules/Environment/Script-Env.ps1
 Modules/Environment/Private-Env.ps1
 Modules/Environment/APIKeys/*
-
 Configs/HP/**
 Configs/Cisco/**
 **/Teams_Network.txt
