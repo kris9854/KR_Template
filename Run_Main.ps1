@@ -62,6 +62,7 @@ Import-Module "$ScriptPath\Modules\Template\TemplateFunctions.psm1" -Verbose
 #Region Call functions from TemplateFunctions
 New-Directory -DirName 'Log' -ErrorAction SilentlyContinue
 New-Directory -DirName 'Modules' -ErrorAction SilentlyContinue
+New-Directory -DirName 'Templates' -ErrorAction SilentlyContinue #Used for templating for different powershell structures. Example task Scheduling
 New-Directory -DirName 'Output' -ErrorAction SilentlyContinue
 #Endregion call function
 #Region call Modules in Modules path
