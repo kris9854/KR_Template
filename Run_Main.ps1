@@ -56,7 +56,7 @@ $global:ScriptPath = Split-Path $script:MyInvocation.MyCommand.Path
 #Region Import Modules
 #Import-Module -Name 'Posh-SSH'
 #Import-Module -Name 'powershell-yaml'
-Import-Module "$ScriptPath\Modules\Template\TemplateFunctions.psm1" -Verbose
+Import-Module "$ScriptPath\Modules\Original-PSModule\TemplateFunctions.psm1" -Verbose
 #Endregion Import Modules
 
 #Region Call functions from TemplateFunctions
@@ -67,7 +67,7 @@ New-Directory -DirName 'Output' -ErrorAction SilentlyContinue
 #Endregion call function
 #Region call Modules in Modules path
 #Get The Modules in modules location excluding the Dev folder
-$script:ModulesPathScriptList = (Get-ChildItem -Path "$Modules" -Filter '*.ps1' -Recurse).FullName | Where-Object { $_ -notlike "$modules\Dev\*" }
+$script:ModulesPathScriptList = (Get-ChildItem -Path "$Modules" -Filter '*.ps1' -Recurse).FullName | Where-Object { $_ -notlike "$Modules\Dev\*" }
 foreach ($Powershellcustommodule in $script:ModulesPathScriptList) {
     try {
         $message = "Importing: " + (Split-Path $Powershellcustommodule -Leaf)
