@@ -1,5 +1,6 @@
 #ENV:Specific#
 Modules/Environment/Script-Env.ps1
+Modules/Environment/Private-Env.ps1
 Modules/Environment/APIKeys/*
 
 Configs/HP/**
