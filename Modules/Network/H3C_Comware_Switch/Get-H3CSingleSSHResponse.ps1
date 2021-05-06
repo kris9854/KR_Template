@@ -15,10 +15,10 @@ function Get-H3CSingleSSHResponse {
         [Parameter(Mandatory = $false)]
         [String]$StripHeaderAt = $null
     )
-
+    $SSHSession = $null
     $SSHSession = New-SSHSession -ComputerName $HostAddress -Port $HostPort -Credential $Credential -AcceptKey:$AcceptKey;
         
-    if ($SSHSession.Connected) {
+    if ($SSHSession.Connected -eq $true) {
         $SSHResponse = Invoke-SSHCommand -SSHSession $SSHSession -Command $Command;
     
         $SSHSessionRemoveResult = Remove-SSHSession -SSHSession $SSHSession;
