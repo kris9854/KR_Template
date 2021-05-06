@@ -2,7 +2,8 @@ function Get-H3CTemplateCMD {
     # Can be used to send multiple commands to a HP Switch.
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(HelpMessage = "Hostname or Ip of the device to witch you wan't to send commands", 
+            Mandatory = $true )]
         [String]$HostAddress,
 
         [Parameter(Mandatory = $false)]
@@ -12,14 +13,13 @@ function Get-H3CTemplateCMD {
         [PSCredential]$Credential = $credObject,
 
         [Parameter( HelpMessage = 'save an "$objectForScript = Get-Content -path INSERT LOCATION OF file -Raw"',
-            Mandatory = $true,
-            Validate)]
+            Mandatory = $true)]
         [array]$CMDTemplate,
 
         # SleepTimerin milisecound
         [Parameter(Mandatory = $false)]
-        [bigint]
-        $SleepTimerMiliSec = '60'
+        [int]
+        $SleepTimerMiliSec = '400'
     )
     
     begin {
@@ -28,26 +28,60 @@ function Get-H3CTemplateCMD {
         [int]$Counter = 1
         $TotalCMDCount = $CMDTemplate.count
         [array]$SSHRespondArray = @()
+        [int]$ProgressBarInt = 0
+        [int]$BigSleepTimer = $SleepTimerMiliSec + 200
     }
     
     process {
         $sshsession = New-SSHSession -ComputerName "$HostAddress" -Credential $Credential -AcceptKey -ErrorAction silentlyContinue;
+        Start-Sleep -Milliseconds "60"
         if ($SSHSession.Connected) {
+  
             #Creates a shell stream for us to feed commands to:
             $SSHShellStream = New-SSHShellStream -Session $sshsession;
+            Start-Sleep -Milliseconds "60"
             if ($SSHShellStream.Session.IsConnected) {
-                
+                [void]$SSHShellStream.Read()
                 foreach ($LineCMD in $CMDTemplate) {
-                    [void]$SSHShellStream.Read()
+                    Write-Progress -Activity "Sending CMD" -Status "$Counter Cmd's Send to $HostAddress" -PercentComplete ($ProgressBarInt / $TotalCMDCount * 100)
+                    $ProgressBarInt++
                     $SSHShellStream.WriteLine("$LineCMD")
-                    Write-Host "$Counter Of $TotalCMDCount CMD's run" -ForegroundColor $Global:TextColour
+                    Write-Debug "$Counter Of $TotalCMDCount CMD's run"
                     Write-Debug "cmd: $LineCMD" 
-                    [array]$SSHRespondArray += $SSHShellStream.Read()
-                    if ($LineCMD -contains 'acl') {
-                        Start-Sleep -Milliseconds "120"
+
+                    switch -Wildcard ($LineCMD) {
+                        '*ACL*' { 
+                            Start-Sleep -Milliseconds $BigSleepTimer;
+                            Break; 
+                        }
+                        '*Save Force*' { 
+                            Start-Sleep -Milliseconds $BigSleepTimer; 
+                            Break; 
+                        }
+                        '*undo dhcp snooping information remote-id*' { 
+                            Start-Sleep -Milliseconds $BigSleepTimer; 
+                            Break; 
+                        }
+                        '*undo dhcp snooping binding record*' { 
+                            Start-Sleep -Milliseconds $BigSleepTimer; 
+                            Break; 
+                        }
+                        '*traffic classifier*' { 
+                            Start-Sleep -Milliseconds $BigSleepTimer; 
+                            Break; 
+                        }
+                        '*traffic behavior*' { 
+                            Start-Sleep -Milliseconds $BigSleepTimer; 
+                            Break; 
+                        }
+                        Default {
+                            Start-Sleep -Milliseconds "$SleepTimerMiliSec"
+                        }
                     }
-                    Start-Sleep -Milliseconds "$SleepTimerMiliSec"
+                    [array]$SSHRespondArray += $SSHShellStream.Read()
+                    # Create a check for if it is change or not (maybe create a call for display acl all -> check returned only contain one entry)
                     $counter++
+                    # 
                 }
                 
             }             
@@ -64,8 +98,7 @@ function Get-H3CTemplateCMD {
     }
     
     end {
-        $SSHRespondArray = $SSHResponse.Output | Out-String;
-        $StartIndex = 0;
-        Return $SSHRespondArray.Substring($StartIndex).Replace("`r`n", "`n").Trim();
+        $ReturnValue = $SSHRespondArray.Trim() | Out-String;
+        Return($ReturnValue);
     }
 }
