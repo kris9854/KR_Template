@@ -45,7 +45,7 @@ $VersionTemplate = '3.0.1'          #Template Script Version
 $VersionScript = '1.0.0'            #Script Version
 [string]$ScriptAuthor = 'Kristian'   #Script Author
 #Endregion Script Specific variables.
-
+$host.ui.RawUI.WindowTitle = "$ScriptName"
 #Region variables and Global Values
 $global:ScriptPath = Split-Path $script:MyInvocation.MyCommand.Path
 [datetime]$Date = Get-Date -Format "dd-MM-yy-HHmm"
