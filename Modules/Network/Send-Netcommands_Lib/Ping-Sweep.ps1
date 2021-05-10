@@ -19,7 +19,12 @@ function Ping-Sweep {
         $ProgressBarInt++
         $Counter++
         $ReturnedValue = Ping-Subnet -HostName $Switch.hostname
-        Write-Host $ReturnedValue -ForegroundColor $Global:writehostsuccessfullcolour
+        if ($ReturnedValue -Match "online") {
+            Write-Host $ReturnedValue -ForegroundColor $Global:writehostsuccessfullcolour
+        }
+        else {
+            Write-Host $ReturnedValue -ForegroundColor $Global:ErrorTextColour
+        }
     }
  
 } 
