@@ -1,4 +1,32 @@
-function Get-H3CTemplateCMD {
+function Send-SSHCommands {
+    <#
+    .SYNOPSIS
+    This function is a helper function to Send-Netcommands function. It extends the functionality of that.
+    
+    .DESCRIPTION
+    Long description
+    
+    .PARAMETER HostAddress
+    Parameter description
+    
+    .PARAMETER HostPort
+    Parameter description
+    
+    .PARAMETER Credential
+    Parameter description
+    
+    .PARAMETER CMDTemplate
+    Parameter description
+    
+    .PARAMETER SleepTimerMiliSec
+    Parameter description
+    
+    .EXAMPLE
+    An example
+    
+    .NOTES
+    General notes
+    #>
     # Can be used to send multiple commands to a HP Switch.
     [CmdletBinding()]
     param (
@@ -19,17 +47,19 @@ function Get-H3CTemplateCMD {
         # SleepTimerin milisecound
         [Parameter(Mandatory = $false)]
         [int]
-        $SleepTimerMiliSec = '400'
+        $SleepTimerMiliSec = '500'
     )
     
     begin {
+        # Removes the SSH Sessions before proceding
+        Get-SSHSession | Remove-SSHSession
         $sshsession = $null
         $SSHShellStream = $null
         [int]$Counter = 1
         $TotalCMDCount = $CMDTemplate.count
         [array]$SSHRespondArray = @()
         [int]$ProgressBarInt = 0
-        [int]$BigSleepTimer = $SleepTimerMiliSec + 200
+        [int]$BigSleepTimer = $SleepTimerMiliSec + 150
     }
     
     process {
@@ -71,6 +101,30 @@ function Get-H3CTemplateCMD {
                             Break; 
                         }
                         '*traffic behavior*' { 
+                            Start-Sleep -Milliseconds $BigSleepTimer; 
+                            Break; 
+                        }
+                        '*access-list*' { 
+                            Start-Sleep -Milliseconds $BigSleepTimer;
+                            Break; 
+                        }
+                        '*write*' { 
+                            Start-Sleep -Milliseconds $BigSleepTimer; 
+                            Break; 
+                        }
+                        '*class*' { 
+                            Start-Sleep -Milliseconds $BigSleepTimer; 
+                            Break; 
+                        }
+                        '*policy*' { 
+                            Start-Sleep -Milliseconds $BigSleepTimer; 
+                            Break; 
+                        }
+                        'no*' { 
+                            Start-Sleep -Milliseconds $BigSleepTimer; 
+                            Break; 
+                        }
+                        'undo*' { 
                             Start-Sleep -Milliseconds $BigSleepTimer; 
                             Break; 
                         }
