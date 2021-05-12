@@ -3,7 +3,7 @@ function Helper-DNSEntry {
     param (
         # Subnet
         [Parameter(Mandatory = $true)]
-        [ipaddress]$Subnet,
+        [string]$Subnet3octets,
         
         # Subnetmask
         [Parameter(Mandatory = $true)]
@@ -32,9 +32,12 @@ function Helper-DNSEntry {
     process {
         #Pinging subnet
         do {
-            $obj = $null
+            $Lookup = $null
+            $Test = $null
+            $obj = $null;
             Remove-Variable -Name 'Test' -ErrorAction SilentlyContinue;
             $IP = "$subnet.$start";
+            Write-Debug -Message "$IP";
             $Test = Test-Connection -ComputerName $IP -Count $ping -Quiet #-TimeoutSeconds 1;
             $Lookup = (Resolve-DnsName -Name 'IP' -ErrorAction SilentlyContinue).NameHost
             if ($Test) {
@@ -78,21 +81,19 @@ function Create-DNSEntry {
     
     begin {
         #Initiate Variables that are not given.
-        if (-not $subnet) {
+        if (([string]::IsNullOrEmpty("$subnet"))) {
             Write-Host -Object "Subnet? EKS 10.0.0.0" -ForegroundColor 'cyan'
             $Subnet = Read-Host;
         }
         #Converting subnet to a string and splitting it to create a better looking DefaultGW call
         $subnetStringSplit = $subnet.ToString().Split('.')
         [string]$subnetBase = $subnetStringSplit[0] + '.' + $subnetStringSplit[1] + '.' + $subnetStringSplit[2] + '.'
-        if (-not $DefaultGW) {
-            Write-Host -Object "Subnet? EKS 10.0.0.0" -ForegroundColor 'cyan';
-            [ipaddress]$DefaultGW = $subnetBase + '1'
-        }
+        [ipaddress]$DefaultGW = $subnetBase + '1'
+        
     }
     
     process {
-        [array]$Global:ReturnValue = Helper-DNSEntry -Subnet $Subnet -Subnetmask $Subnetmask -DefaultGW $DefaultGW #-DNSServerIP $DNSServerIP
+        [array]$Global:ReturnValue = Helper-DNSEntry -Subnet3octets "$subnetBase" -Subnetmask "$Subnetmask" -DefaultGW "$DefaultGW" #-DNSServerIP $DNSServerIP
         $ReturnValue
     }
     
