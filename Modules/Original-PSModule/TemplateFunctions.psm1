@@ -16,7 +16,6 @@ function Create-Credentials {
     [pscredential]$script:credObject = New-Object System.Management.Automation.PSCredential ($userName, $userPassword)
 
 }
-
 Function New-Directory {
     <#
     .SYNOPSIS
@@ -335,8 +334,7 @@ function Test-InTextIpv6Match {
 }#Endregion Test-InTextIpv6Match
 # Endregion Working With IP
 #>
-#Getting the Firewall Rules 
-
+#Getting the Firewall Rules
 function Get-FirewallLog {
     param (
         # Name Of the Hostname 
