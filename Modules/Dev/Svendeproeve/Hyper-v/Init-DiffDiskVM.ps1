@@ -31,26 +31,29 @@ function Init-DiffVM {
         #Create the variables used in the Script
         #Variables Script
 
-        #Domain Dependence
+        #Region Domain Dependence
         $DomainToJoin = 'LKKORP.LOCAL';
         $OuPath = 'OU=VM,OU=Servers,OU=Computers,OU=LKCorp,DC=LKKORP,DC=local"'
+        #Endregion Domain Dependence
 
-        #Credential Creation for Domain Join
+        #Region Credential Creation for Domain Join
         $CredObject = Create-Credentials -userName "$($DomainToJoin.Split('.')[0])\SA-MDT"
+        #Endregion Credential Creation for Domain Join
 
-        #VM NAME
+        #Region VM NAME
         Write-Host -Object 'VM NAME: ' -ForegroundColor "$TxtColour" -NoNewline;
         $VMName = Read-Host;
         $VmName = "$($DomainToJoin.Split('.')[0])-$VMName";
-        
-        #Ip address
+        #Endregion VM NAME 
+
+        #Region Ip address
         Write-Host -Object 'IP address: ' -ForegroundColor "$TxtColour" -NoNewline;
         [System.Net.IPAddress]$IP = Read-Host;
         $DNS = 10.0.10.100 #Standard
         [System.Net.IPAddress]$DefaultGateway = "10.0.$($IP.ToString().split('.')[2]).1";
         $CIDR = '24'
         $NetworkCard = (Get-NetAdapter | Where-Object { $_.Name -eq 'Ethernet' }).InterfaceAlias
-
+        #Endregion Ip address
     }
     
     process {
