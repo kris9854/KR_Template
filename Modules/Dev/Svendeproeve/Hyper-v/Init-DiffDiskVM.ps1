@@ -19,10 +19,11 @@ function Create-Credentials {
 
 }
 function Init-DiffVM {
-    <# No parameters are needed this is just to make it easy to create new VM's 
+    <# 
+    No parameters are needed this is just to make it easy to create new VM's 
     I really like using functions instead of plain Scripting. Gives better overview
-    
     #>
+
     [CmdletBinding()]
     param ()
     
