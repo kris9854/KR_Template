@@ -33,11 +33,11 @@ function Init-DiffVM {
 
         #Region Domain Dependence
         $DomainToJoin = 'LKKORP.LOCAL';
-        $OuPath = 'OU=VM,OU=Servers,OU=Computers,OU=LKCorp,DC=LKKORP,DC=local"'
+        $OuPath = 'OU=VM,OU=Servers,OU=Computers,OU=LKCorp,DC=LKKORP,DC=local';
         #Endregion Domain Dependence
 
         #Region Credential Creation for Domain Join
-        $CredObject = Create-Credentials -userName "$($DomainToJoin.Split('.')[0])\SA-MDT"
+        $CredObject = Create-Credentials -userName "$($DomainToJoin.Split('.')[0])\SA-MDT";
         #Endregion Credential Creation for Domain Join
 
         #Region VM NAME
@@ -49,9 +49,9 @@ function Init-DiffVM {
         #Region Ip address
         Write-Host -Object 'IP address: ' -ForegroundColor "$TxtColour" -NoNewline;
         [System.Net.IPAddress]$IP = Read-Host;
-        $DNS = 10.0.10.100 #Standard
+        $DNS = "10.0.10.100" #Standard
         [System.Net.IPAddress]$DefaultGateway = "10.0.$($IP.ToString().split('.')[2]).1";
-        $CIDR = '24'
+        $CIDR = '24';
         $NetworkCard = (Get-NetAdapter | Where-Object { $_.Name -eq 'Ethernet' }).InterfaceAlias
         #Endregion Ip address
     }
@@ -74,17 +74,18 @@ function Init-DiffVM {
         #VM Name
         try {
             if ($VMName -like '*DC*') {
-                Write-Host -Object 'Is This a Domain Controller?' -ForegroundColor "$TxtColour" -NoNewline;
+                Write-Host -Object 'Is This a Domain Controller?' -ForegroundColor "$TxtColour";
                 Write-Host -Object 'Y/N' -ForegroundColor "$TxtColour" -NoNewline;
                 $Answer = Read-Host;
             }
             if (($Answer -eq 'y') -or ($Answer -eq 'Y')) {
-                Rename-Computer -NewName "$VMName"
-                New-NetIPAddress –InterfaceAlias $NetworkCard.InterfaceAlias –IPv4Address $IP –PrefixLength 24 -DefaultGateway $DefaultGateway
-                Set-DnsClientServerAddress –InterfaceAlias $NetworkCard.InterfaceAlias -ServerAddresses "$DNS"
-                Remove-Item -LiteralPath 'c:\Init-VM' -Recurse -Force -Confirm
+                Rename-Computer -NewName "$VMName";
+                New-NetIPAddress –InterfaceAlias $NetworkCard.InterfaceAlias –IPv4Address $IP –PrefixLength 24 -DefaultGateway $DefaultGateway;
+                Set-DnsClientServerAddress –InterfaceAlias $NetworkCard.InterfaceAlias -ServerAddresses "$DNS";
+                Remove-Item -LiteralPath 'c:\Init-VM' -Recurse -Force -Confirm;
      
-                Write-Host "Please manually add this pc to the domain."
+                Write-Host "Please manually add this pc to the domain.";
+                Start-Sleep -Seconds 5
             }
             else {
                 New-NetIPAddress –InterfaceAlias $NetworkCard.InterfaceAlias –IPv4Address $IP –PrefixLength 24 -DefaultGateway $DefaultGateway
@@ -114,8 +115,9 @@ function Init-DiffVM {
         Write-Host -Object "*   Press any key to restart                                            *" -ForegroundColor $SuccessColour
         Write-Host -Object "*************************************************************************" -ForegroundColor $SuccessColour
         $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
-        Restart-Computer -Force
-    
+        Write-Host -Object "PC will restart in 5 seconds" -ForegroundColor "$global:TxtColour";
+        Start-Sleep -Seconds 5;
+        Restart-Computer -Force;
     }
 }
 #Global variable
