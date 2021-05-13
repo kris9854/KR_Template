@@ -79,26 +79,24 @@ function Init-DiffVM {
                 $Answer = Read-Host;
             }
             if (($Answer -eq 'y') -or ($Answer -eq 'Y')) {
-                <#
                 Rename-Computer -NewName "$VMName"
                 New-NetIPAddress –InterfaceAlias $NetworkCard.InterfaceAlias –IPv4Address $IP –PrefixLength 24 -DefaultGateway $DefaultGateway
                 Set-DnsClientServerAddress –InterfaceAlias $NetworkCard.InterfaceAlias -ServerAddresses "$DNS"
                 Remove-Item -LiteralPath 'c:\Init-VM' -Recurse -Force -Confirm
-                #>
+     
                 Write-Host "Please manually add this pc to the domain."
             }
             else {
-                <#
                 New-NetIPAddress –InterfaceAlias $NetworkCard.InterfaceAlias –IPv4Address $IP –PrefixLength 24 -DefaultGateway $DefaultGateway
                 Set-DnsClientServerAddress –InterfaceAlias $NetworkCard.InterfaceAlias -ServerAddresses "$DNS"
                 Rename-Computer -NewName "$VMName"
                 Add-Computer -DomainName "$DomainToJoin" -OUPath "$OuPath"
                 Remove-Item -LiteralPath 'c:\Init-VM' -Recurse -Force -Confirm
-                #>
+
             } 
         }  
         catch {
-            Throw("ERROR in TC part")
+            Throw("ERROR in Try, Catch part")
         }     
 
     }
