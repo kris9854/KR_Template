@@ -120,9 +120,12 @@ function Init-DiffVM {
         Restart-Computer -Force;
     }
 }
+
+
 #Global variable
 $global:TxtColour = 'Cyan';
 $global:ConfirmColour = 'yellow';
 $global:SuccessColour = 'Green';
 
+#Function Call
 Init-DiffVM
