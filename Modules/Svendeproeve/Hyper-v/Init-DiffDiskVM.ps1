@@ -65,9 +65,9 @@ function Init-DiffVM {
         Write-Host -Object "*   DNS: $DNS" -ForegroundColor $ConfirmColour
         Write-Host -Object "*   CIDR: $CIDR" -ForegroundColor $ConfirmColour
         Write-Host -Object "*   Network Card: $NetworkCard" -ForegroundColor $ConfirmColour
-        Write-Host -Object "*************************************************************************" -ForegroundColor $SuccessColour
-        Write-Host -Object "*   Press any key to confirm or ctrl+c to cancel                        *" -ForegroundColor $SuccessColour
-        Write-Host -Object "*************************************************************************" -ForegroundColor $SuccessColour
+        Write-Host -Object "*************************************************************************" -ForegroundColor $ConfirmColour
+        Write-Host -Object "*   Press any key to confirm or ctrl+c to cancel                        *" -ForegroundColor $ConfirmColour
+        Write-Host -Object "*************************************************************************" -ForegroundColor $ConfirmColour
         Read-Host 
         #IP
         
@@ -123,9 +123,7 @@ function Init-DiffVM {
 
 
 #Global variable
-$global:TxtColour = 'Cyan';
-$global:ConfirmColour = 'yellow';
-$global:SuccessColour = 'Green';
+# Moved to public
 
 #Function Call
 Init-DiffVM
