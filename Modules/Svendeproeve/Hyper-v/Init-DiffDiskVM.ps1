@@ -108,7 +108,7 @@ function Init-DiffVM {
         Write-Host -Object "*   Press any key to restart                                            *" -ForegroundColor $SuccessColour
         Write-Host -Object "*************************************************************************" -ForegroundColor $SuccessColour
         $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
-        Write-Host -Object "PC will restart in 5 seconds" -ForegroundColor "$global:TxtColour";
+        Write-Host -Object "PC will restart in 5 seconds" -ForegroundColor "$SuccessColour";
         Start-Sleep -Seconds 5;
         Restart-Computer -Force;
     }
