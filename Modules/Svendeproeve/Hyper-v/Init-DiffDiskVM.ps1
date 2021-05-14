@@ -87,7 +87,7 @@ function Init-DiffVM {
                 Start-Sleep -Seconds 5
                 Rename-Computer -NewName "$VMName"
                 Add-Computer -DomainName "$DomainToJoin" -Credential $CredObject -OUPath "$OuPath" -NewName $VMName -LocalCredential $LocalCred
-                Remove-Item -LiteralPath 'c:\Init-VM' -Recurse -Force -Confirm
+                # Remove-Item -LiteralPath 'c:\Init-VM' -Recurse -Force -Confirm
 
             } 
         }  
