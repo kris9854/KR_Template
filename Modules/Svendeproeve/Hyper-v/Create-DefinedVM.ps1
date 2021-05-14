@@ -119,7 +119,7 @@ function Create-CustomVM {
         [int]$ClientVlan = [int]$Global:StandardClientVlan
 
         if (-not $VMName) {
-            Write-Host -Object 'Please provide a name for the new machine, IF you want to create multiple press ANY button: "' -ForegroundColor "$Global:ForegroundColour" -NoNewline
+            Write-Host -Object 'Please provide a name for the new machine, IF you want to create multiple press ANY button: ' -ForegroundColor "$Global:TextColour" -NoNewline
             $VMName = Read-Host -ErrorAction SilentlyContinue
             $CsvImport = "$VMName"
             if (($VMName -eq $CSV) -or ([string]::IsNullOrEmpty($vmName))) {
@@ -139,15 +139,15 @@ function Create-CustomVM {
             # Variable
             $VMDiskPath = (Split-Path "$VMParentDisk") + '\' + "$vm" + '.vhdx'
             #Write what will be done
-            Write-Host -Object '######################################################################################################' -ForegroundColor "$global:ConfirmColour"
+            Write-Host -Object '#############################################################################' -ForegroundColor "$global:ConfirmColour"
             Write-Host -Object "##      VM Name: $VM                            " -ForegroundColor "$global:ConfirmColour"
             Write-Host -Object "##      VM Parent Disk: $VMParentDisk           " -ForegroundColor "$global:ConfirmColour"
             Write-Host -Object "##      VM Generation: $VMGen                   " -ForegroundColor "$global:ConfirmColour"
             Write-Host -Object "##      Server Vlan: $ServerVlan                " -ForegroundColor "$global:ConfirmColour"
             Write-Host -Object "##      Client Vlan: $ClientVlan                " -ForegroundColor "$global:ConfirmColour"
-            Write-Host -Object '#####################################################################################################' -ForegroundColor "$global:ConfirmColour"
+            Write-Host -Object '##############################################################################' -ForegroundColor "$global:ConfirmColour"
             Write-Host -Object "# Press any key to confirm or ctrl+c to cancel  " -ForegroundColor $global:ConfirmColour
-            Write-Host -Object "#####################################################################################################" -ForegroundColor "$global:ConfirmColour"
+            Write-Host -Object "##############################################################################" -ForegroundColor "$global:ConfirmColour"
             Read-Host 
             # Creating the Machine with Differencing Disk. 
             New-VHD -ParentPath "$VMParentDisk" -Path "$VMDiskPath" -Differencing
@@ -156,13 +156,13 @@ function Create-CustomVM {
             Set-VMNetworkAdapterVlan -VMName "$VM" -Access -VlanId $ServerVlan 
       
             # Output to PS CLI
-            Write-Host -Object '##################################################' -ForegroundColor "$Global:writehostsuccessfullcolourr"
-            Write-Host -Object "##      VM Name: $VM                            ##" -ForegroundColor "$Global:writehostsuccessfullcolour"
-            Write-Host -Object "##      VM Parent Disk: $VMParentDisk           ##" -ForegroundColor "$Global:writehostsuccessfullcolour"
-            Write-Host -Object "##      VM Generation: $VMGen                   ##" -ForegroundColor "$Global:writehostsuccessfullcolour"
-            Write-Host -Object "##      Server Vlan: $ServerVlan                ##" -ForegroundColor "$Global:writehostsuccessfullcolour"
-            Write-Host -Object "##      Client Vlan: $ClientVlan                ##" -ForegroundColor "$Global:writehostsuccessfullcolour"
-            Write-Host -Object '##################################################' -ForegroundColor "$Global:writehostsuccessfullcolour"
+            Write-Host -Object '#############################################################################' -ForegroundColor "$Global:writehostsuccessfullcolour"
+            Write-Host -Object "##      VM Name: $VM                            " -ForegroundColor "$Global:writehostsuccessfullcolour"
+            Write-Host -Object "##      VM Parent Disk: $VMParentDisk           " -ForegroundColor "$Global:writehostsuccessfullcolour"
+            Write-Host -Object "##      VM Generation: $VMGen                   " -ForegroundColor "$Global:writehostsuccessfullcolour"
+            Write-Host -Object "##      Server Vlan: $ServerVlan                " -ForegroundColor "$Global:writehostsuccessfullcolour"
+            Write-Host -Object "##      Client Vlan: $ClientVlan                " -ForegroundColor "$Global:writehostsuccessfullcolour"
+            Write-Host -Object '#############################################################################' -ForegroundColor "$Global:writehostsuccessfullcolour"
            
         }
     }
