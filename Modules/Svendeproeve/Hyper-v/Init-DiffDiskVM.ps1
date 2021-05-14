@@ -81,10 +81,10 @@ function Init-DiffVM {
                 Start-Sleep -Seconds 5
             }
             else {
-                New-NetIPAddress –InterfaceAlias $NetworkCard –IPAddress $IP –PrefixLength 24 -DefaultGateway $DefaultGateway
+                New-NetIPAddress -IPAddress "10.0.0.51" -InterfaceAlias "$NetworkCard" -DefaultGateway "$IP" -AddressFamily IPv4 -PrefixLength 24
                 Set-DnsClientServerAddress –InterfaceAlias $NetworkCard -ServerAddresses "$DNS"
                 Rename-Computer -NewName "$VMName"
-                Add-Computer -DomainName "$DomainToJoin" -OUPath "$OuPath" -Credential $CredObject -LocalCredential $LocalCred
+                Add-Computer -DomainName "$DomainToJoin" -OUPath "$OuPath" -Credential $CredObject -LocalCredential $LocalCred -NewName $VMName
                 Remove-Item -LiteralPath 'c:\Init-VM' -Recurse -Force -Confirm
 
             } 
