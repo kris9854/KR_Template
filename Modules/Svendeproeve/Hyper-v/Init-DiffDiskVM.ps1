@@ -15,11 +15,11 @@ function Init-DiffVM {
         $SuccessColour = 'green'
         #Region Domain Dependence
         $DomainToJoin = 'LKKORP.LOCAL';
-        $OuPath = 'OU=VM,OU=Servers,OU=Computers,OU=LKCorp,DC=LKKORP,DC=local';
+        $OuPath = 'OU=VM,OU=Servers,OU=Computers,OU=LKKorp,DC=LKKORP,DC=local';
         #Endregion Domain Dependence
 
         #Region Credential Creation for Domain Join
-        [string]$DomainUserName = "$($DomainToJoin.Split('.')[0])\SA-MDT"
+        [string]$DomainUserName = "SA-MDT@$DomainToJoin"
         Write-Host "Type in password: " -ForegroundColor "$TxtColour" -NoNewline
         [securestring]$DomainUserPassword = Read-Host -AsSecureString
         [pscredential]$credObject = New-Object System.Management.Automation.PSCredential ($DomainUserName, $DomainUserPassword)
@@ -73,7 +73,7 @@ function Init-DiffVM {
             }
             if (($Answer -eq 'y') -or ($Answer -eq 'Y')) {
                 Rename-Computer -NewName "$VMName";
-                New-NetIPAddress –InterfaceAlias $NetworkCard -IPAddress $IP –PrefixLength 24 -DefaultGateway $DefaultGateway;
+                New-NetIPAddress -IPAddress "$IP" -InterfaceAlias "$NetworkCard" -DefaultGateway "$DefaultGateway" -AddressFamily IPv4 -PrefixLength 24
                 Set-DnsClientServerAddress –InterfaceAlias $NetworkCard -ServerAddresses "$DNS";
                 Remove-Item -LiteralPath 'c:\Init-VM' -Recurse -Force -Confirm;
      
@@ -81,10 +81,12 @@ function Init-DiffVM {
                 Start-Sleep -Seconds 5
             }
             else {
-                New-NetIPAddress -IPAddress "10.0.0.51" -InterfaceAlias "$NetworkCard" -DefaultGateway "$IP" -AddressFamily IPv4 -PrefixLength 24
+                New-NetIPAddress -IPAddress "$IP" -InterfaceAlias "$NetworkCard" -DefaultGateway "$DefaultGateway" -AddressFamily IPv4 -PrefixLength 24
                 Set-DnsClientServerAddress –InterfaceAlias $NetworkCard -ServerAddresses "$DNS"
+                Write-Host -Object "AWAITING NETWORK CHANGE" -ForegroundColor $SuccessColour
+                Start-Sleep -Seconds 5
                 Rename-Computer -NewName "$VMName"
-                Add-Computer -DomainName "$DomainToJoin" -OUPath "$OuPath" -Credential $CredObject -LocalCredential $LocalCred -NewName $VMName
+                Add-Computer -DomainName "$DomainToJoin" -Credential $CredObject -OUPath "$OuPath" -NewName $VMName -LocalCredential $LocalCred
                 Remove-Item -LiteralPath 'c:\Init-VM' -Recurse -Force -Confirm
 
             } 
