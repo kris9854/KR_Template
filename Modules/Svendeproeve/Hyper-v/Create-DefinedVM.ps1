@@ -150,11 +150,11 @@ function Create-CustomVM {
             Write-Host -Object "##############################################################################" -ForegroundColor "$global:ConfirmColour"
             Read-Host 
             # Creating the Machine with Differencing Disk. 
-            New-VHD -ParentPath "$VMParentDisk" -Path "$VMDiskPath" -Differencing
-            New-VM -Name "$VM" -Generation "$VMGen" -MemoryStartupBytes $BaseMemory -SwitchName "$SwitchName"
+            $Disk = New-VHD -ParentPath "$VMParentDisk" -Path "$VMDiskPath" -Differencing
+            New-VM -Name "$VM" -Generation "$VMGen" -MemoryStartupBytes $BaseMemory -SwitchName "$SwitchName" -VHDPath $VMDiskPath
             Set-VM -Name "$VM" -StaticMemory -ProcessorCount $ProcCount -AutomaticCheckpointsEnabled 0 
             Set-VMNetworkAdapterVlan -VMName "$VM" -Access -VlanId $ServerVlan 
-      
+            Get-VM -Name "$VM" | Start-VM
             # Output to PS CLI
             Write-Host -Object '#############################################################################' -ForegroundColor "$Global:writehostsuccessfullcolour"
             Write-Host -Object "##      VM Name: $VM                            " -ForegroundColor "$Global:writehostsuccessfullcolour"
