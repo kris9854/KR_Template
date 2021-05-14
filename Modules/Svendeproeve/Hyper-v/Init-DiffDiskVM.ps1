@@ -1,23 +1,3 @@
-function Create-Credentials {
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = $false)]
-        [string]
-        $userName
-    )
-    # Asking for credentials:
-   
-    if (-Not $userName) {
-        Write-Host "Insert Username: " -ForegroundColor "$TxtColour" -NoNewline
-        [string]$userName = Read-Host
-    }
-    
-    Write-Host "Type in password: " -ForegroundColor "$TxtColour" -NoNewline
-    [securestring]$userPassword = Read-Host -AsSecureString
-    #Create the $CredObject
-    [pscredential]$script:credObject = New-Object System.Management.Automation.PSCredential ($userName, $userPassword)
-
-}
 function Init-DiffVM {
     <#
     No parameters are needed this is just to make it easy to create new VM's 
@@ -30,14 +10,27 @@ function Init-DiffVM {
     begin {
         #Create the variables used in the Script
         #Variables Script
-
+        $TxtColour = 'Green'
+        $ConfirmColour = 'Yellow'
+        $SuccessColour = 'green'
         #Region Domain Dependence
         $DomainToJoin = 'LKKORP.LOCAL';
         $OuPath = 'OU=VM,OU=Servers,OU=Computers,OU=LKCorp,DC=LKKORP,DC=local';
         #Endregion Domain Dependence
 
         #Region Credential Creation for Domain Join
-        $CredObject = Create-Credentials -userName "$($DomainToJoin.Split('.')[0])\SA-MDT";
+        [string]$DomainUserName = "$($DomainToJoin.Split('.')[0])\SA-MDT"
+        Write-Host "Type in password: " -ForegroundColor "$TxtColour" -NoNewline
+        [securestring]$DomainUserPassword = Read-Host -AsSecureString
+        [pscredential]$credObject = New-Object System.Management.Automation.PSCredential ($DomainUserName, $DomainUserPassword)
+
+
+        #LocalCred
+        [string]$LocalUserName = 'Administrator'
+        [string]$LocalUserPassword = 'Password1'
+        # Convert to SecureString
+        [securestring]$LocalSecStringPassword = ConvertTo-SecureString $LocalUserPassword -AsPlainText -Force
+        [pscredential]$LocalCred = New-Object System.Management.Automation.PSCredential ($LocalUserName, $LocalSecStringPassword)
         #Endregion Credential Creation for Domain Join
 
         #Region VM NAME
@@ -80,18 +73,18 @@ function Init-DiffVM {
             }
             if (($Answer -eq 'y') -or ($Answer -eq 'Y')) {
                 Rename-Computer -NewName "$VMName";
-                New-NetIPAddress –InterfaceAlias $NetworkCard.InterfaceAlias –IPv4Address $IP –PrefixLength 24 -DefaultGateway $DefaultGateway;
-                Set-DnsClientServerAddress –InterfaceAlias $NetworkCard.InterfaceAlias -ServerAddresses "$DNS";
+                New-NetIPAddress –InterfaceAlias $NetworkCard -IPAddress $IP –PrefixLength 24 -DefaultGateway $DefaultGateway;
+                Set-DnsClientServerAddress –InterfaceAlias $NetworkCard -ServerAddresses "$DNS";
                 Remove-Item -LiteralPath 'c:\Init-VM' -Recurse -Force -Confirm;
      
                 Write-Host "Please manually add this pc to the domain.";
                 Start-Sleep -Seconds 5
             }
             else {
-                New-NetIPAddress –InterfaceAlias $NetworkCard.InterfaceAlias –IPv4Address $IP –PrefixLength 24 -DefaultGateway $DefaultGateway
-                Set-DnsClientServerAddress –InterfaceAlias $NetworkCard.InterfaceAlias -ServerAddresses "$DNS"
+                New-NetIPAddress –InterfaceAlias $NetworkCard –IPAddress $IP –PrefixLength 24 -DefaultGateway $DefaultGateway
+                Set-DnsClientServerAddress –InterfaceAlias $NetworkCard -ServerAddresses "$DNS"
                 Rename-Computer -NewName "$VMName"
-                Add-Computer -DomainName "$DomainToJoin" -OUPath "$OuPath"
+                Add-Computer -DomainName "$DomainToJoin" -OUPath "$OuPath" -Credential $CredObject -LocalCredential $LocalCred
                 Remove-Item -LiteralPath 'c:\Init-VM' -Recurse -Force -Confirm
 
             } 
