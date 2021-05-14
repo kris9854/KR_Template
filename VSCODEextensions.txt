@@ -1,0 +1,8 @@
+code --install-extension bierner.markdown-preview-github-styles
+code --install-extension CoenraadS.bracket-pair-colorizer
+code --install-extension haaaad.ansible
+code --install-extension mechatroner.rainbow-csv
+code --install-extension ms-vscode.powershell
+code --install-extension NabeelValley.easyzoom
+code --install-extension redhat.vscode-yaml
+code --install-extension tobysmith568.run-in-powershell
