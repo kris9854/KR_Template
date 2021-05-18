@@ -16,6 +16,9 @@ function Init-DiffVM {
         #Region Domain Dependence
         $DomainToJoin = 'LKKORP.LOCAL';
         $OuPath = 'OU=VM,OU=Servers,OU=Computers,OU=LKKorp,DC=LKKORP,DC=local';
+        #Ask User for Location 
+        Write-Host -Object 'Please Write location Example VIB Or HER: ' -ForegroundColor "$TxtColour" -NoNewline;
+        $VMNameLocation = Read-Host
         #Endregion Domain Dependence
 
         #Region Credential Creation for Domain Join
@@ -36,7 +39,7 @@ function Init-DiffVM {
         #Region VM NAME
         Write-Host -Object 'VM NAME: ' -ForegroundColor "$TxtColour" -NoNewline;
         $VMName = Read-Host;
-        $VmName = "$($DomainToJoin.Split('.')[0])-$VMName";
+        $VmName = "$VMNameLocation-$VMName";
         #Endregion VM NAME 
 
         #Region Ip address

@@ -135,7 +135,11 @@ function Create-CustomVM {
     process {
         # Device Creation process
         foreach ($VM in $CsvImport) {
-
+            # Sets the name of the vm 
+            if ($VM -notcontains '-'){
+                $VMNameLocation = $env:COMPUTERNAME.split('-')[0]
+                $VM = "$VMNameLocation-$VM"
+            }
             # Variable
             $VMDiskPath = (Split-Path "$VMParentDisk") + '\' + "$vm" + '.vhdx'
             #Write what will be done
