@@ -68,12 +68,21 @@ function Create-CustomVM {
    .PARAMETER SwitchName
    Parameter description
    The switch to be attached to the VM
-   
+
+   .PARAMETER ProcCount
+   Parameter description
+   The proces count to be added to the new vm
+
    .EXAMPLE
-   An example
+   Create-CustomVM -VMName 'DKVIB-SERV0001' -SwtchName 'VLanINT01'
+   - Creates a Vm with the name DKVIB-SERV0001 and attach the switch named VLANINT01. It will be based on the parent win2019 disk
+    
+   Create-CustomVM -SwtchName 'VLanINT01'
+   - Creates multiple VM name based on the CSV file in same location of script called "Servers.csv" switch named VLANINT01. 
+     It will be based on the parent win2019 disk
    
    .NOTES
-   General notes
+   Dansk: Lavet til min svendeproeve
    #>
     [CmdletBinding()]
     param (
@@ -167,33 +176,33 @@ function Create-CustomVM {
     }
 }
 function GLobalVars {
-[string]$Global:ForegroundColour = 'cyan'
-[string]$Global:StandardVMParentDisk = 'D:\Server\Disk\WIN2019\VM-Parent01.vhdx'
-[int]$Global:StandardVMGen = 2
-[int]$Global:StandarServerVlan = 4
-[int]$Global:StandardClientVlan = 6
-##############################################################
-<#                                                           #
+    [string]$Global:ForegroundColour = 'cyan'
+    [string]$Global:StandardVMParentDisk = 'D:\Server\Disk\WIN2019\VM-Parent01.vhdx'
+    [int]$Global:StandardVMGen = 2
+    [int]$Global:StandarServerVlan = 4
+    [int]$Global:StandardClientVlan = 6
+    ##############################################################
+    <#                                                           #
 This is a Public Env file. Do not write sensitive data here. #
 It will be uploaded to your choosen repository               #
 #>                                                           #
-##############################################################
-#
-#
-#
-#Region Colour
-$Global:writehostsuccessfullcolour = 'green'
-$Global:BannerColour = 'cyan'
-$Global:TextColour = 'cyan'
-$Global:ErrorTextColour = 'red'
-#Endregion Colour
+    ##############################################################
+    #
+    #
+    #
+    #Region Colour
+    $Global:writehostsuccessfullcolour = 'green'
+    $Global:BannerColour = 'cyan'
+    $Global:TextColour = 'cyan'
+    $Global:ErrorTextColour = 'red'
+    #Endregion Colour
 
-##
-#Svendeproeve
-[string]$Global:ForegroundColour = 'cyan'
-[string]$global:TxtColour = 'Cyan';
-[string]$global:ConfirmColour = 'yellow';
-[string]$global:SuccessColour = 'Green';
+    ##
+    #Svendeproeve
+    [string]$Global:ForegroundColour = 'cyan'
+    [string]$global:TxtColour = 'Cyan';
+    [string]$global:ConfirmColour = 'yellow';
+    [string]$global:SuccessColour = 'Green';
 
 }
 GLobalVars
