@@ -1,8 +1,20 @@
 function Init-DiffVM {
     <#
-    No parameters are needed this is just to make it easy to create new VM's 
-    I really like using functions instead of plain Scripting. Gives better overview
-    #>
+.SYNOPSIS
+Just run script to go through the setup
+
+.DESCRIPTION
+Script used to do 3 tasks.
+1. Change IP
+2. Change Computername
+3. Join Domain using a Service account named SA-MDT
+
+.EXAMPLE
+Init-DiffVM
+
+.NOTES
+Dansk: Skrevet til min svendeproeve.
+#>
 
     [CmdletBinding()]
     param ()
@@ -16,9 +28,6 @@ function Init-DiffVM {
         #Region Domain Dependence
         $DomainToJoin = 'LKKORP.LOCAL';
         $OuPath = 'OU=VM,OU=Servers,OU=Computers,OU=LKKorp,DC=LKKORP,DC=local';
-        #Ask User for Location 
-        Write-Host -Object 'Please Write location Example VIB Or HER: ' -ForegroundColor "$TxtColour" -NoNewline;
-        $VMNameLocation = Read-Host
         #Endregion Domain Dependence
 
         #Region Credential Creation for Domain Join
@@ -39,13 +48,13 @@ function Init-DiffVM {
         #Region VM NAME
         Write-Host -Object 'VM NAME: ' -ForegroundColor "$TxtColour" -NoNewline;
         $VMName = Read-Host;
-        $VmName = "$VMNameLocation-$VMName";
+        $VmName = "$($DomainToJoin.Split('.')[0])-$VMName";
         #Endregion VM NAME 
 
         #Region Ip address
         Write-Host -Object 'IP address: ' -ForegroundColor "$TxtColour" -NoNewline;
         [System.Net.IPAddress]$IP = Read-Host;
-        $DNS = "10.0.4.100" #Standard
+        $DNS = "10.0.10.100" #Standard
         [System.Net.IPAddress]$DefaultGateway = "10.0.$($IP.ToString().split('.')[2]).1";
         $CIDR = '24';
         $NetworkCard = (Get-NetAdapter | Where-Object { $_.Name -eq 'Ethernet' }).InterfaceAlias
@@ -122,6 +131,8 @@ function Init-DiffVM {
 
 #Global variable
 # Moved to public
+#Function Call
+Init-DiffVipublic
 
 #Function Call
 Init-DiffVM
