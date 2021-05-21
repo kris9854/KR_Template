@@ -4,7 +4,7 @@ function Create-ServerEnv {
         # Path
         [Parameter(Mandatory = $false)]
         [string]
-        $VMPath = $env:HOMEDRIVE,
+        $VMPath = "D:",
 
         # Name Of the Switch needed for the VM (should be a trunked virtual interface)
         [Parameter(Mandatory = $false)]
@@ -18,9 +18,9 @@ function Create-ServerEnv {
         $VirtualMachinePath = (Get-VMHost).VirtualMachinePath
         $VmNetworkAdapter = (Get-VMSwitch -Name "$SwitchName").Name
 
-        if ((-not [bool](Get-Item -Path 'C:\Server' -ErrorAction SilentlyContinue)) -or
-            (-not [bool](Get-Item -Path 'C:\Server\Disk' -ErrorAction SilentlyContinue)) -or
-            (-not [bool](Get-Item -Path 'C:\Server\VM' -ErrorAction SilentlyContinue))) {
+        if ((-not [bool](Get-Item -Path 'D:\Server' -ErrorAction SilentlyContinue)) -or
+            (-not [bool](Get-Item -Path 'D:\Server\Disk' -ErrorAction SilentlyContinue)) -or
+            (-not [bool](Get-Item -Path 'D:\Server\VM' -ErrorAction SilentlyContinue))) {
                 
             New-Item -Path $Path -Name 'Server'
             $VMPath = $VMPath + '\server'
@@ -29,11 +29,6 @@ function Create-ServerEnv {
             New-Item -Path $VMPath -Name 'VM'
             $VMPath = $VMPath + '\VM'
         }  
-
-        if (-not $VmNetworkAdapter) {
-            New-VMSwitch -Name "$SwitchName"
-            Get-VMNetworkAdapter -SwitchName "$SwitchName" -ManagementOS $true | Set-VMNetworkAdapterVlan -Trunk -AllowedVlanIdList "$Global:StandarServerVlan, $Global:StandardClientVlan"
-        }
     }
     
     process {
@@ -136,10 +131,6 @@ function Create-CustomVM {
         # Device Creation process
         foreach ($VM in $CsvImport) {
             # Sets the name of the vm 
-            if ($VM -notcontains '-'){
-                $VMNameLocation = $env:COMPUTERNAME.split('-')[0]
-                $VM = "$VMNameLocation-$VM"
-            }
             # Variable
             $VMDiskPath = (Split-Path "$VMParentDisk") + '\' + "$vm" + '.vhdx'
             #Write what will be done
@@ -175,3 +166,34 @@ function Create-CustomVM {
         
     }
 }
+function GLobalVars {
+[string]$Global:ForegroundColour = 'cyan'
+[string]$Global:StandardVMParentDisk = 'D:\Server\Disk\WIN2019\VM-Parent01.vhdx'
+[int]$Global:StandardVMGen = 2
+[int]$Global:StandarServerVlan = 4
+[int]$Global:StandardClientVlan = 6
+##############################################################
+<#                                                           #
+This is a Public Env file. Do not write sensitive data here. #
+It will be uploaded to your choosen repository               #
+#>                                                           #
+##############################################################
+#
+#
+#
+#Region Colour
+$Global:writehostsuccessfullcolour = 'green'
+$Global:BannerColour = 'cyan'
+$Global:TextColour = 'cyan'
+$Global:ErrorTextColour = 'red'
+#Endregion Colour
+
+##
+#Svendeproeve
+[string]$Global:ForegroundColour = 'cyan'
+[string]$global:TxtColour = 'Cyan';
+[string]$global:ConfirmColour = 'yellow';
+[string]$global:SuccessColour = 'Green';
+
+}
+GLobalVars
