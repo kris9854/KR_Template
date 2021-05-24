@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'SilentlyContinue'
 #$PWSHPath = Split-Path (Get-Command -Name pwsh | Where-Object { $_.Path -like "*\7\*" }).Path
 Set-Location "$PSScriptRoot"
-$host.ui.RawUI.WindowTitle = 'Network-PowerAutomation'
+$host.ui.RawUI.WindowTitle = 'KR_Templating'
 $Host.UI.RawUI.BackgroundColor = 'Black'
 $Host.UI.RawUI.ForegroundColor = 'Gray'
 $Host.PrivateData.FormatAccentColor = 'Green'
