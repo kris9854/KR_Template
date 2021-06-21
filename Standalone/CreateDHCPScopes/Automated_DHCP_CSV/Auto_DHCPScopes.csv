@@ -1,0 +1,3 @@
+Scopename;NetworkID
+{{Location}}_Client;{{Client_Network_ID}}
+{{Location}}_Voice;{{Voice_Network_ID}}
