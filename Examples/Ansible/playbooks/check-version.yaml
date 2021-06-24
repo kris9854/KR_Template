@@ -1,0 +1,33 @@
+---
+- name: Checking Switch Version
+  hosts: HP
+  vars:
+  - Version: "{{ HPVersion }}"
+  - ansible_connection: network_cli
+
+  collections:
+    - community.network
+    
+  tasks:
+  #Needed for no ----More---- prompts
+      - name: Init
+        cli_command:
+          command: "screen-length disable"
+  
+      - name: RetriveOSVersion
+        cli_command:
+          command: "display version"
+        register: result
+
+      - name: Display Lookup Version
+        debug:
+          msg: "{{ Version }}"
+
+      - fail: msg="Wrong HPCOM7 version"
+        when: '"{{ Version }}" not in "{{ result.stdout_lines[0] }}"'
+      #  when: "not ('{{ Version }}' in result.stdout[0])"
+
+      - name: Display the output Last
+        debug:
+          msg: "{{ result.stdout_lines[0] }}"
+
