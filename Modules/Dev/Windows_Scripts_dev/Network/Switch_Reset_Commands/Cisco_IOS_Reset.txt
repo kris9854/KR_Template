@@ -1,0 +1,5 @@
+write erase
+y
+reload
+n
+y
