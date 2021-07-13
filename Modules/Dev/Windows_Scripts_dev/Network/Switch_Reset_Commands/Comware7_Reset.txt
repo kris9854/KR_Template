@@ -1,3 +1,5 @@
+{{USER}}
+{{Password}}
 screen-length disable
 reset saved-configuration main
 n
