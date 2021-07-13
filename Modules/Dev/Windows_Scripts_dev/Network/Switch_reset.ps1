@@ -35,9 +35,7 @@ function Reset-Switch {
         # Path to Text Fil for Cisco device
         [Parameter(Mandatory = $false)]
         [string]
-        $Cisco_IOS_Reset = "$PSScriptRoot\Switch_Reset_Commands\Cisco_IOS_Reset.txt",
-
-
+        $Cisco_IOS_Reset = "$PSScriptRoot\Switch_Reset_Commands\Cisco_IOS_Reset.txt"
     )
     
     begin {
@@ -89,18 +87,21 @@ function Reset-Switch {
         }
 
         $Port = New-Object System.IO.Ports.SerialPort "$COMPORT", 9600, None, 8, one
+        Start-Sleep -Seconds 1
     }
     
     process {
         [array]$PortLineRead
-        $port.ReadTimeout = 9000
+        $port.ReadTimeout = 5000
         $Port.open()
+        Start-Sleep -Seconds 1
+        $Port.ReadExisting()
         foreach ($Line in $ResetCommands) {
             Write-Verbose -Message "Processing: $Line"
 
-            Start-Sleep -Seconds 3
+            Start-Sleep -Seconds 2
             $Port.WriteLine("$Line")
-            Start-Sleep -Seconds 3
+            Start-Sleep -Seconds 2
         }
         $PortLineRead = $Port.ReadExisting()
         Write-Debug -Message "$PortLineRead"
