@@ -26,14 +26,14 @@ Dansk: Skrevet til min svendeproeve.
         $ConfirmColour = 'Yellow'
         $SuccessColour = 'green'
         #Region Domain Dependence
-        $DomainToJoin = 'LKKORP.LOCAL';
-        $OuPath = 'OU=VM,OU=Servers,OU=Computers,OU=LKKorp,DC=LKKORP,DC=local';
+        $DomainToJoin = 'lab.local';
+        $OuPath = 'OU=VM,OU=Servers,OU=Computers,OU=lab,DC=lab,DC=local';
         #Endregion Domain Dependence
 
         #Region Credential Creation for Domain Join
         [string]$DomainUserName = "SA-MDT@$DomainToJoin"
-        Write-Host "Type in password: " -ForegroundColor "$TxtColour" -NoNewline
-        [securestring]$DomainUserPassword = Read-Host -AsSecureString
+        [string]$DomainPassword = "Asdf1234"
+        [securestring]$DomainUserPassword = ConvertTo-SecureString $DomainPassword -AsPlainText -Force
         [pscredential]$credObject = New-Object System.Management.Automation.PSCredential ($DomainUserName, $DomainUserPassword)
 
 
@@ -46,7 +46,7 @@ Dansk: Skrevet til min svendeproeve.
         #Endregion Credential Creation for Domain Join
 
         #Region VM NAME
-        Write-Host -Object 'VM fullNAM (Eeks DKHER-DHCP0001): ' -ForegroundColor "$TxtColour" -NoNewline;
+        Write-Host -Object 'VM fullNAM (Eeks LAB-DC01): ' -ForegroundColor "$TxtColour" -NoNewline;
         $VMName = Read-Host;
         $VmName = "$VMName";
         #Endregion VM NAME 
@@ -54,7 +54,7 @@ Dansk: Skrevet til min svendeproeve.
         #Region Ip address
         Write-Host -Object 'IP address: ' -ForegroundColor "$TxtColour" -NoNewline;
         [System.Net.IPAddress]$IP = Read-Host;
-        $DNS = "10.0.4.100" #Standard
+        $DNS = "10.0.10.100" #Standard
         [System.Net.IPAddress]$DefaultGateway = "10.$($IP.ToString().split('.')[1]).$($IP.ToString().split('.')[2]).1";
         $CIDR = '24';
         $NetworkCard = (Get-NetAdapter | Where-Object { $_.Name -eq 'Ethernet' }).InterfaceAlias
@@ -127,12 +127,5 @@ Dansk: Skrevet til min svendeproeve.
         Restart-Computer -Force;
     }
 }
-
-
-#Global variable
-# Moved to public
-#Function Call
-Init-DiffVipublic
-
 #Function Call
 Init-DiffVM

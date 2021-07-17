@@ -4,12 +4,12 @@ function Create-ServerEnv {
         # Path
         [Parameter(Mandatory = $false)]
         [string]
-        $VMPath = "C:",
+        $VMPath = "E:",
 
         # Name Of the Switch needed for the VM (should be a trunked virtual interface)
         [Parameter(Mandatory = $false)]
         [string]
-        $SwitchName = 'VintTrunk01'
+        $SwitchName = 'VSwitch01'
     )
     
     begin {
